@@ -12,6 +12,9 @@ class UsersController extends Controller
      */
     public function index()
     {
+        // Authorize the request
+        $this->authorize('viewAny', User::class);
+
         $users = User::all();
         return response()->json(["users" => $users]);
     }
@@ -64,7 +67,7 @@ class UsersController extends Controller
         }
         // Delete the user from the database
         $user->delete();
-        
+
         // Return a JSON response with a 204 status code
         return response()->json(['message' => 'User deleted successfully'] , 200);
     }
