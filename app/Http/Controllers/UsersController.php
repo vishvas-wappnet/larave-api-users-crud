@@ -12,11 +12,16 @@ class UsersController extends Controller
      */
     public function index()
     {
-        // Authorize the request
-        $this->authorize('viewAny', User::class);
 
-        $users = User::all();
-        return response()->json(["users" => $users]);
+        // Check if user is authenticated
+        if (!auth()->check()) {
+            // If user is not authenticated, return a JSON response with access denied message
+            return response()->json(['message' => 'Access denied.'], 403);
+        } else {
+            $users = User::all();
+            return response()->json(["users" => $users]);
+        }
+
     }
 
     /**
@@ -24,9 +29,15 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $user = User::create($request->all());
-        return response()->json(['user' => $user], 201);
+        if (!auth()->check()) {
+            // If user is not authenticated, return a JSON response with access denied message
+            return response()->json(['message' => 'Access denied.'], 403);
+        } else {
+            $user = User::create($request->all());
+            return response()->json(['user' => $user], 201);
+        }
     }
+    
 
     /**
      * Display the specified resource.
@@ -69,6 +80,6 @@ class UsersController extends Controller
         $user->delete();
 
         // Return a JSON response with a 204 status code
-        return response()->json(['message' => 'User deleted successfully'] , 200);
+        return response()->json(['message' => 'User deleted successfully'], 200);
     }
 }

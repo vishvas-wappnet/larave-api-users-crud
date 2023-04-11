@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +20,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//login and register route
+Route::post('register', [AuthController::class, 'register'])->name('register');;
+Route::post('login', [AuthController::class, 'login'])->name('login');
+
+
 Route::middleware(['auth:api'])->group(function () {
     // Routes for CRUD operations on User model
-    Route::apiResource('users', UsersController::class);
-
+    // Route::apiResource('users', UsersController::class);
 
     // Route for viewing all users
     Route::get('users', [UsersController::class, 'index'])->name('users.index');
@@ -39,5 +44,6 @@ Route::middleware(['auth:api'])->group(function () {
     // Delete a user
     Route::delete('/users/{id}', [UsersController::class, 'destroy']);
 
-
 });
+
+
